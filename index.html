@@ -6,56 +6,45 @@
     <title>Hedaya Compass</title>
     <style>
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            text-align: center; 
-            padding: 50px 20px; 
-            background-color: #1a1a1a; /* خلفية فخمة */
-            color: #d4af37; /* لون ذهبي ملكي */
+            background: radial-gradient(circle, #2c2c2c 0%, #000000 100%);
+            color: #d4af37;
+            font-family: 'Arial', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0;
         }
-        .form-container { 
-            background: #262626; 
-            padding: 40px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            display: inline-block; 
-            width: 100%; 
-            max-width: 400px;
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px; border-radius: 20px;
             border: 1px solid #d4af37;
+            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 320px;
         }
-        h2 { margin-bottom: 10px; font-size: 28px; }
-        p { color: #ffffff; margin-bottom: 25px; opacity: 0.8; }
-        input, button { 
-            width: 100%; 
-            padding: 15px; 
-            margin: 10px 0; 
-            border-radius: 10px; 
-            border: 1px solid #444; 
-            box-sizing: border-box; 
-            font-size: 16px;
+        h2 { font-size: 24px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            background: transparent; border: 1px solid #555;
+            color: white; border-radius: 8px; outline: none;
         }
-        input { background: #333; color: white; }
-        button { 
-            background: linear-gradient(45deg, #d4af37, #f2d06b); 
-            color: #1a1a1a; 
-            cursor: pointer; 
-            border: none; 
-            font-weight: bold; 
+        input:focus { border-color: #d4af37; }
+        button {
+            width: 100%; padding: 12px; margin-top: 20px;
+            background: #d4af37; color: black; border: none;
+            border-radius: 8px; font-weight: bold; cursor: pointer;
             transition: 0.3s;
         }
-        button:hover { transform: scale(1.02); brightness: 1.1; }
+        button:hover { background: #f2d06b; transform: translateY(-2px); }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Hedaya Compass</h2>
-        <p>نظام حفظ البيانات والوفرة</p>
-        
-        <form action="https://formspree.io/f/YourEmail@example.com" method="POST">
-            <input type="text" name="name" placeholder="الاسم الكامل" required>
-            <input type="email" name="email" placeholder="بريدك الإلكتروني" required>
-            <input type="text" name="note" placeholder="ملاحظة إضافية">
-            <button type="submit">إرسال وحفظ البيانات</button>
+    <div class="card">
+        <h2>HEDAYA COMPASS</h2>
+        <form action="ضعي_الرابط_هنا" method="POST">
+            <input type="text" name="name" placeholder="الاسم" required>
+            <input type="email" name="email" placeholder="الإيميل" required>
+            <button type="submit">إرسال وحفظ</button>
         </form>
     </div>
 </body>
 </html>
+
+    
