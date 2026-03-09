@@ -2,25 +2,60 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hedaya Compass</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f2f5; }
-        .form-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; width: 300px; }
-        input, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; cursor: pointer; border: none; font-weight: bold; }
-        button:hover { background-color: #0056b3; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            padding: 50px 20px; 
+            background-color: #1a1a1a; /* خلفية فخمة */
+            color: #d4af37; /* لون ذهبي ملكي */
+        }
+        .form-container { 
+            background: #262626; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            display: inline-block; 
+            width: 100%; 
+            max-width: 400px;
+            border: 1px solid #d4af37;
+        }
+        h2 { margin-bottom: 10px; font-size: 28px; }
+        p { color: #ffffff; margin-bottom: 25px; opacity: 0.8; }
+        input, button { 
+            width: 100%; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 10px; 
+            border: 1px solid #444; 
+            box-sizing: border-box; 
+            font-size: 16px;
+        }
+        input { background: #333; color: white; }
+        button { 
+            background: linear-gradient(45deg, #d4af37, #f2d06b); 
+            color: #1a1a1a; 
+            cursor: pointer; 
+            border: none; 
+            font-weight: bold; 
+            transition: 0.3s;
+        }
+        button:hover { transform: scale(1.02); brightness: 1.1; }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Hedaya Compass</h2>
-        <p>سجل بياناتك هنا</p>
-        <form action="https://formspree.io/f/EMAIL_HERE" method="POST">
+        <p>نظام حفظ البيانات والوفرة</p>
+        
+        <form action="https://formspree.io/f/YourEmail@example.com" method="POST">
             <input type="text" name="name" placeholder="الاسم الكامل" required>
             <input type="email" name="email" placeholder="بريدك الإلكتروني" required>
-            <button type="submit">إرسال وحفظ</button>
+            <input type="text" name="note" placeholder="ملاحظة إضافية">
+            <button type="submit">إرسال وحفظ البيانات</button>
         </form>
     </div>
 </body>
 </html>
-
