@@ -3,48 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hedaya Compass</title>
+    <title>بوصلة هدايه - الإصدار السيادي 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background: radial-gradient(circle, #2c2c2c 0%, #000000 100%);
-            color: #d4af37;
-            font-family: 'Arial', sans-serif;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; margin: 0;
+        body { font-family: 'Cairo', sans-serif; background-color: #00001a; color: #ffffff; margin: 0; overflow-x: hidden; }
+        :root { --gold: #D4AF37; --royal-blue: #00002A; }
+        
+        /* شاشة القفل الذهبية */
+        #lock-screen {
+            position: fixed; inset: 0; background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000;
         }
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 40px; border-radius: 20px;
-            border: 1px solid #d4af37;
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            width: 320px;
-        }
-        h2 { font-size: 24px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
-        input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            background: transparent; border: 1px solid #555;
-            color: white; border-radius: 8px; outline: none;
-        }
-        input:focus { border-color: #d4af37; }
-        button {
-            width: 100%; padding: 12px; margin-top: 20px;
-            background: #d4af37; color: black; border: none;
-            border-radius: 8px; font-weight: bold; cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover { background: #f2d06b; transform: translateY(-2px); }
+        .gold-border { border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #AA8831 100%); color: #000; font-weight: 900; }
+        
+        /* تصميم الواجهة */
+        .nav-link.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+        .stat-card { background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.2); transition: 0.3s; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>HEDAYA COMPASS</h2>
-        <form action="ضعي_الرابط_هنا" method="POST">
-            <input type="text" name="name" placeholder="الاسم" required>
-            <input type="email" name="email" placeholder="الإيميل" required>
-            <button type="submit">إرسال وحفظ</button>
-        </form>
+
+    <div id="lock-screen">
+        <div class="w-16 h-16 gold-border rounded-full flex items-center justify-center text-3xl font-black mb-6 text-[#D4AF37]">H</div>
+        <h2 class="text-2xl font-black mb-2 text-[#D4AF37]">بوصلة هدايه</h2>
+        <p class="text-slate-400 text-sm mb-6">يرجى إدخال كود التفعيل للوصول للبوصلة</p>
+        <input type="password" id="access-code" placeholder="كود الوصول" class="bg-transparent border-b-2 border-[#D4AF37] text-center p-2 mb-6 outline-none text-xl w-48">
+        <button onclick="unlock()" class="btn-gold px-10 py-3 rounded-full hover:scale-105 transition">دخول السيادة</button>
+        <p id="error-msg" class="text-red-500 mt-4 text-sm hidden">الكود غير صحيح، راجعي الإدارة</p>
     </div>
+
+    <div id="app-content" class="max-w-md mx-auto min-h-screen p-6 hidden">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-xl font-black text-[#D4AF37]">بوصلة هدايه</h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">الخصوصية المالية المطلقة</p>
+            </div>
+            <button onclick="location.reload()" class="text-[10px] border border-slate-700 px-3 py-1 rounded text-slate-500">خروج آمن</button>
+        </header>
+
+        <nav class="flex justify-around mb-8 border-b border-slate-800 pb-2 text-xs">
+            <button onclick="tab('dashboard')" class="nav-link active py-2" id="tab-dashboard">الرئيسية</button>
+            <button onclick="tab('entries')" class="nav-link py-2" id="tab-entries">القيود</button>
+            <button onclick="tab('settings')" class="nav-link py-2" id="tab-settings">الإعدادات</button>
+        </nav>
+
+        <div id="sec-dashboard">
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="stat-card p-4">
+                    <p class="text-[10px] text-slate-400">الإيرادات</p>
+                    <p class="text-xl font-bold text-[#D4AF37]">$<span id="total-in">0</span></p>
+                </div>
+                <div class="stat-card p-4">
+                    <p class="text-[10px] text-slate-400">النفقات</p>
+                    <p class="text-xl font-bold text-red-400">$<span id="total-out">0</span></p>
+                </div>
+            </div>
+            
+            <div class="stat-card p-6 mb-8 text-center">
+                <p class="text-xs text-slate-400 mb-1">صافي التدفق المالي</p>
+                <p class="text-3xl font-black text-white">$<span id="total-net">0</span></p>
+            </div>
+
+            <h3 class="text-sm font-bold mb-4 border-r-2 border-[#D4AF37] pr-2">آخر العمليات المحفوظة محلياً</h3>
+            <div id="history" class="space-y-2 text-xs"></div>
+        </div>
+
+        <div id="sec-entries" class="hidden space-y-4">
+            <div class="stat-card p-6">
+                <h3 class="text-sm font-bold mb-4 text-[#D4AF37]">تسجيل حركة مالية جديدة</h3>
+                <select id="type" class="w-full bg-[#00002A] p-3 rounded-lg mb-3 border border-slate-700">
+                    <option value="in">إيراد (+)</option>
+                    <option value="out">مصروف (-)</option>
+                </select>
+                <input type="text" id="desc" placeholder="البيان (مثلاً: بيع منتج رقمي)" class="w-full bg-[#00002A] p-3 rounded-lg mb-3 border border-slate-700 outline-none">
+                <input type="number" id="amt" placeholder="المبلغ" class="w-full bg-[#00002A] p-3 rounded-lg mb-6 border border-slate-700 outline-none">
+                <button onclick="saveRecord()" class="btn-gold w-full py-3 rounded-lg">حفظ في خزنة الجهاز</button>
+            </div>
+        </div>
+
+        <div id="sec-settings" class="hidden space-y-4">
+            <div class="stat-card p-6 border-red-900/30">
+                <h3 class="text-sm font-bold mb-2 text-red-400">إدارة البيانات</h3>
+                <p class="text-[10px] text-slate-400 mb-6">تحذير: مسح البيانات سيؤدي لحذف كل السجلات من متصفحك بشكل نهائي.</p>
+                <button onclick="clearData()" class="w-full border border-red-900/50 text-red-500 py-2 rounded-lg text-xs">مسح كافة البيانات</button>
+            </div>
+            <div class="text-center pt-10">
+                <p class="text-[10px] text-slate-600">بوصلة هدايه v1.0.0</p>
+                <p class="text-[9px] text-slate-700">جميع البيانات مشفرة ومحفوظة محلياً</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // كود التفعيل الافتراضي (يمكنك تغييره هنا)
+        const MASTER_CODE = "2026"; 
+
+        function unlock() {
+            const code = document.getElementById('access-code').value;
+            if(code === MASTER_CODE) {
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
+                loadData();
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        }
+
+        function tab(name) {
+            document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
+            document.getElementById('sec-' + name).classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+        }
+
+        function saveRecord() {
+            const type = document.getElementById('type').value;
+            const desc = document.getElementById('desc').value;
+            const amt = parseFloat(document.getElementById('amt').value);
+
+            if(!desc || !amt) return alert("يرجى تعبئة كافة البيانات");
+
+            const records = JSON.parse(localStorage.getItem('hedaya_compass_data') || '[]');
+            records.unshift({ type, desc, amt, date: new Date().toLocaleString('ar-EG') });
+            localStorage.setItem('hedaya_compass_data', JSON.stringify(records));
+
+            // تنظيف الحقول والعودة للرئيسية
+            document.getElementById('desc').value = '';
+            document.getElementById('amt').value = '';
+            tab('dashboard');
+            loadData();
+        }
+
+        function loadData() {
+            const records = JSON.parse(localStorage.getItem('hedaya_compass_data') || '[]');
+            const history = document.getElementById('history');
+            let totalIn = 0, totalOut = 0;
+
+            history.innerHTML = '';
+            records.forEach(r => {
+                if(r.type === 'in') totalIn += r.amt; else totalOut += r.amt;
+                
+                const div = document.createElement('div');
+                div.className = "flex justify-between p-3 bg-white/5 rounded-lg border-r-2 " + (r.type === 'in' ? "border-green-500" : "border-red-500");
+                div.innerHTML = `<div><p class="font-bold">${r.desc}</p><p class="text-[8px] text-slate-500">${r.date}</p></div>
+                                 <div class="text-left font-black ${r.type === 'in' ? "text-green-400" : "text-red-400"}">${r.type === 'in' ? '+' : '-'}$${r.amt}</div>`;
+                history.appendChild(div);
+            });
+
+            document.getElementById('total-in').innerText = totalIn.toLocaleString();
+            document.getElementById('total-out').innerText = totalOut.toLocaleString();
+            document.getElementById('total-net').innerText = (totalIn - totalOut).toLocaleString();
+        }
+
+        function clearData() {
+            if(confirm("هل أنتِ متأكدة من حذف كافة السجلات المالية؟")) {
+                localStorage.removeItem('hedaya_compass_data');
+                loadData();
+            }
+        }
+    </script>
 </body>
 </html>
+
 
     
