@@ -4,15 +4,23 @@
     <meta charset="UTF-8">
     <title>Hedaya Compass</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
-        .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: inline-block; }
-        h1 { color: #333; }
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f2f5; }
+        .form-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; width: 300px; }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; cursor: pointer; border: none; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>مرحباً بك في Hedaya Compass</h1>
-        <p>هذا الموقع قيد الإنشاء لحفظ بياناتك.</p>
+    <div class="form-container">
+        <h2>Hedaya Compass</h2>
+        <p>سجل بياناتك هنا</p>
+        <form action="https://formspree.io/f/EMAIL_HERE" method="POST">
+            <input type="text" name="name" placeholder="الاسم الكامل" required>
+            <input type="email" name="email" placeholder="بريدك الإلكتروني" required>
+            <button type="submit">إرسال وحفظ</button>
+        </form>
     </div>
 </body>
 </html>
+
