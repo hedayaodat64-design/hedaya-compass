@@ -1,3 +1,20 @@
+<div id="auth-container" style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; text-align: center; font-family: Arial, sans-serif;">
+    <h2 id="auth-title">تسجيل الدخول للبوصلة</h2>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" style="width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
+    <input type="password" id="password" placeholder="كلمة السر" style="width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
+    
+    <div style="margin-top: 10px;">
+        <button onclick="handleLogin()" style="padding: 10px 20px; background-color: #2c3e50; color: white; border: none; border-radius: 5px; cursor: pointer;">دخول</button>
+        <button onclick="handleSignUp()" style="padding: 10px 20px; background-color: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 5px;">تسجيل جديد</button>
+    </div>
+    <p id="auth-message" style="color: red; margin-top: 10px;"></p>
+</div>
+
+<div id="product-content" style="display: none;">
+    <h2>أهلاً بكِ في محتواكِ الخاص</h2>
+    <p>هذا المحتوى محمي ولا يظهر إلا بعد تسجيل الدخول.</p>
+    <button onclick="handleLogout()" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 5px;">تسجيل خروج</button>
+</div>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
