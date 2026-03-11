@@ -3,258 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوصلة هدايه - النظام السيادي</title>
+    <title>Sovereign Compass | Hedaya</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --royal-blue: #00002A;
-            --gold-primary: #D4AF37;
-            --gold-light: #F1E5AC;
-            --deep-sea: #1A3F75;
+            --royal-dark: #00002A;
+            --gold-accent: #D4AF37;
         }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--royal-blue); margin: 0; overflow-x: hidden; }
-
-        /* شاشة الدخول السرية */
-        #pin-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--royal-blue); z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .login-box { width: 90%; max-width: 400px; text-align: center; }
-        .logo-box {
-            width: 80px; height: 80px; background: white; border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 40px; border: 2px solid var(--gold-primary);
-        }
-        .pin-input {
-            width: 100%; padding: 15px; background: transparent; border: none;
-            border-bottom: 2px solid var(--gold-primary); color: white;
-            text-align: center; font-size: 28px; letter-spacing: 12px; outline: none;
-        }
-        .btn-gold {
-            width: 100%; padding: 15px; background: var(--gold-primary);
-            color: var(--royal-blue); border-radius: 30px; font-weight: 900;
-            margin-top: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--royal-dark);
+            margin: 0;
+            color: white;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* تنسيقات البوصلة الأصلية (تظهر بعد الدخول) */
-        #main-app { display: none; background-color: #fcfaf7; min-height: 100vh; }
-        .dark-card { background-color: var(--royal-blue); color: white; border-radius: 40px; border: 1px solid var(--gold-primary); }
-        .stat-card { padding: 30px; margin-bottom: 15px; box-shadow: 0 20px 40px rgba(0,0,42,0.3); }
-        .stat-card .value { font-size: 34px; font-weight: 900; color: var(--gold-primary); }
-        .white-card { background: white; border-radius: 35px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        #side-menu { transition: 0.4s; transform: translateX(100%); }
-        #side-menu.open { transform: translateX(0); }
-        .nav-icon-link { width: 60px; height: 60px; background: var(--deep-sea); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--gold-light); cursor: pointer; }
-        .nav-icon-link.active { background: var(--gold-primary); color: var(--royal-blue); }
-        .accounting-code { font-size: 7px; opacity: 0.5; color: var(--gold-primary); display: block; margin-top: -2px; }
-        .btn-action { background: linear-gradient(135deg, var(--royal-blue) 0%, var(--deep-sea) 100%); color: var(--gold-primary); font-weight: 900; padding: 12px; border-radius: 15px; width: 100%; border: 1px solid var(--gold-primary); }
+        /* 1. شاشة الرمز السري الملكية (البوابة الحامية) */
+        #auth-gate-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--royal-dark);
+            z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .logo-box-v3 {
+            width: 110px; height: 110px;
+            background: white; border-radius: 28px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 55px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--gold-accent);
+        }
+
+        .logo-h-text { font-size: 55px; font-weight: 900; color: var(--royal-dark); }
+
+        .dots-row-v3 { display: flex; gap: 18px; margin-bottom: 15px; }
+        .dot-v3 { width: 12px; height: 12px; background-color: #4B5563; border-radius: 2px; transition: 0.3s; }
+        .dot-v3.active { background-color: #D1D5DB; box-shadow: 0 0 10px rgba(209, 213, 219, 0.5); }
+
+        .input-underline-v3 {
+            width: 180px; border-bottom: 2px solid var(--gold-accent);
+            margin-bottom: 40px; position: relative;
+        }
+
+        #pin-input-v3 {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; background: transparent; border: none; outline: none;
+            color: transparent; cursor: default;
+        }
+
+        .gold-btn-v3 {
+            background-color: var(--gold-accent); color: var(--royal-dark);
+            font-weight: 900; font-size: 18px; padding: 12px 70px;
+            border-radius: 25px; cursor: pointer; border: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .gold-btn-v3:active { transform: scale(0.95); }
+
+        /* 2. واجهة البوصلة (التصميم الأصلي - لا تغيير) */
+        #compass-ui-v3 {
+            display: none; width: 100%; min-height: 100vh;
+            background-color: #F8FAFB; color: var(--royal-dark);
+            overflow-y: auto;
+        }
+
+        .original-header {
+            background: white; padding: 25px; border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .original-card {
+            background: var(--royal-dark); margin: 20px; padding: 32px;
+            border-radius: 35px; position: relative; overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .orig-label { color: #9CA3AF; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+        .orig-value { color: var(--gold-accent); font-size: 40px; font-weight: 900; margin-top: 10px; }
+        .orig-id { position: absolute; top: 25px; left: 25px; color: rgba(255,255,255,0.08); font-family: monospace; font-size: 10px; }
+
+        .orig-history-title { font-weight: 900; font-size: 18px; margin: 24px 24px 15px; border-right: 4px solid var(--gold-accent); padding-right: 12px; }
+
+        .orig-empty-state {
+            background: white; border-radius: 40px; padding: 60px 20px;
+            text-align: center; border: 2px dashed #E2E8F0; margin: 0 20px 20px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="pin-screen">
-        <div class="login-box">
-            <div class="logo-box"><span class="text-4xl font-black text-[#00002A]">H</span></div>
-            <input type="password" id="pinInput" class="pin-input" placeholder="****" maxlength="4" autofocus>
-            <button class="btn-gold" onclick="checkPin()">دخول السيادة</button>
-            <p id="error-msg" class="text-red-500 mt-4 hidden">الرمز غير صحيح</p>
+    <!-- 1. شاشة الدخول (البوابة) -->
+    <div id="auth-gate-screen">
+        <div class="logo-box-v3">
+            <span class="logo-h-text">H</span>
         </div>
+        <div class="dots-row-v3" id="dots-container-v3">
+            <div class="dot-v3"></div><div class="dot-v3"></div><div class="dot-v3"></div><div class="dot-v3"></div>
+        </div>
+        <div class="input-underline-v3">
+            <input type="password" id="pin-input-v3" inputmode="numeric" maxlength="4" autofocus>
+        </div>
+        <button class="gold-btn-v3" onclick="checkHedayaAccess()">دخول</button>
     </div>
 
-    <div id="main-app">
-        <div id="overlay" class="fixed inset-0 bg-black/60 hidden z-[90]" onclick="toggleMenu()"></div>
-
-        <div id="side-menu" class="fixed top-0 right-0 h-full w-[100px] bg-white shadow-2xl z-[100] flex flex-col items-center pt-24 border-l border-gold-primary">
-            <div class="nav-icon-link active" onclick="showSection('dashboard', this)">🏠</div>
-            <div class="nav-icon-link" onclick="showSection('manual-entry', this)">✍️</div>
-            <div class="nav-icon-link" onclick="showSection('sales-entry', this)">🛒</div>
-            <div class="nav-icon-link" onclick="showSection('profit-calc', this)">📊</div>
-            <div class="nav-icon-link" onclick="showSection('sovereign', this)">👑</div>
-            <div class="mt-auto mb-10 p-4 bg-red-50 rounded-xl cursor-pointer" onclick="location.reload()">🚪</div>
-        </div>
-
-        <div class="max-w-md mx-auto p-6 relative">
-            <header class="flex justify-between items-center mb-10">
-                <div class="p-3 bg-[#00002A] rounded-xl border border-[#D4AF37] cursor-pointer" onclick="toggleMenu()">☰</div>
-                <div class="text-right">
-                    <h1 class="text-2xl font-black text-[#00002A]">بوصلة هدايه</h1>
-                    <p class="text-[11px] text-[#D4AF37] font-bold uppercase tracking-widest">الوعي المالي والوضوح الرقمي</p>
-                </div>
-                <div class="w-14 h-14 dark-card flex items-center justify-center text-2xl font-black text-[#D4AF37]">H</div>
-            </header>
-
-            <div id="section-dashboard" class="space-y-4">
-                <div class="dark-card stat-card">
-                    <p class="text-slate-400 text-xs font-bold uppercase">إجمالي الإيرادات</p>
-                    <div class="value mt-1">$<span id="display-inflow">0</span></div>
-                </div>
-                <div class="dark-card stat-card" style="background-color: #000035;">
-                    <p class="text-slate-400 text-xs font-bold uppercase">إجمالي النفقات</p>
-                    <div class="value mt-1">$<span id="display-outflow">0</span></div>
-                </div>
-                <div class="white-card mt-6">
-                    <h3 class="font-black border-r-4 border-[#D4AF37] pr-3 mb-4 text-lg text-[#00002A]">القيود اليومية</h3>
-                    <div id="records-list" class="space-y-3 text-sm mb-6"></div>
-                    <div style="position: relative; height:300px; width:100%"><canvas id="financeChart"></canvas></div>
+    <!-- 2. واجهة البوصلة (التصميم الأصلي) -->
+    <div id="compass-ui-v3">
+        <header class="original-header">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-[#00002A] rounded-2xl flex items-center justify-center text-[#D4AF37] font-black text-xl shadow-lg">H</div>
+                <div>
+                    <h1 class="text-xl font-black text-[#00002A]">بوصلة هدايه</h1>
+                    <p class="text-[9px] text-[#D4AF37] font-bold uppercase tracking-widest">السيادة المالية والوفرة</p>
                 </div>
             </div>
+            <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-100">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00002A" stroke-width="3"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </div>
+        </header>
 
-            <div id="section-sovereign" class="hidden space-y-6">
-                <h2 class="text-2xl font-black mb-4 text-[#00002A]">الميزانية</h2>
-                <div class="white-card border-r-8 border-[#00002A] flex justify-between items-center">
-                    <div><span class="font-black">الأصول</span><span class="accounting-code">1000</span></div>
-                    <span id="asset-total" class="font-black text-xl">$0</span>
-                </div>
-                <div class="white-card border-r-8 border-[#1A3F75] flex justify-between items-center">
-                    <div><span class="font-black">الالتزامات</span><span class="accounting-code">2000</span></div>
-                    <span id="liab-total" class="font-black text-xl">$0</span>
-                </div>
-                <div class="white-card border-r-8 border-[#D4AF37] flex justify-between items-center">
-                    <div><span class="font-black">حقوق الملكية</span><span class="accounting-code">3000</span></div>
-                    <span id="equity-total" class="font-black text-xl">$0</span>
-                </div>
+        <main class="mt-4">
+            <!-- إجمالي الإيرادات -->
+            <div class="original-card">
+                <div class="orig-id">INC-100</div>
+                <p class="orig-label">إجمالي الإيرادات</p>
+                <div class="orig-value">$0</div>
             </div>
 
-            <div id="section-profit-calc" class="hidden space-y-4">
-                <div class="white-card">
-                    <h2 class="text-xl font-black mb-4 text-[#D4AF37]">تحليل الربحية</h2>
-                    <input type="number" id="calc-cost" oninput="calcProfit()" placeholder="تكلفة المنتج" class="w-full p-4 bg-slate-50 rounded-2xl mb-2">
-                    <input type="number" id="calc-price" oninput="calcProfit()" placeholder="سعر البيع" class="w-full p-4 bg-slate-50 rounded-2xl mb-4">
-                    <div class="p-4 bg-amber-50 rounded-2xl flex justify-between">
-                        <span class="font-bold">صافي الربح: $<span id="calc-net">0</span></span>
-                        <span id="calc-margin" class="font-black text-[#D4AF37]">0%</span>
-                    </div>
-                </div>
+            <!-- إجمالي النفقات -->
+            <div class="original-card">
+                <div class="orig-id">EXP-200</div>
+                <p class="orig-label">إجمالي النفقات</p>
+                <div class="orig-value text-red-500">$0</div>
             </div>
 
-            <div id="section-sales-entry" class="hidden space-y-4">
-                <div class="white-card">
-                    <h2 class="text-xl font-black mb-4 text-[#D4AF37]">تسجيل حركة</h2>
-                    <select id="sale-type" class="w-full p-4 bg-slate-50 rounded-2xl mb-2 font-bold"><option value="sale">إيرادات (+)</option><option value="purchase">نفقات (-)</option></select>
-                    <input type="text" id="party-name" placeholder="البيان" class="w-full p-4 bg-slate-50 rounded-2xl mb-2">
-                    <input type="number" id="item-price" placeholder="القيمة" class="w-full p-4 bg-slate-50 rounded-2xl mb-4">
-                    <button class="btn-action" onclick="addTrade()">ترحيل القيد</button>
-                </div>
+            <div class="orig-history-title text-[#00002A]">آخر العمليات السيادية</div>
+            <div class="orig-empty-state">
+                <p class="text-slate-400 font-bold">بانتظار تسجيل أولى خطواتكِ في عالم الوفرة..</p>
             </div>
-
-            <div id="section-manual-entry" class="hidden space-y-4">
-                <div class="white-card">
-                    <h2 class="text-xl font-black mb-4 text-[#D4AF37]">قيد محاسبي</h2>
-                    <select id="entry-target" class="w-full p-4 bg-slate-50 rounded-2xl mb-2 font-bold"><option value="asset">الأصول</option><option value="liab">الالتزامات</option><option value="equity">حقوق الملكية</option></select>
-                    <input type="number" id="entry-amount" placeholder="القيمة" class="w-full p-4 bg-slate-50 rounded-2xl mb-4">
-                    <button class="btn-action" onclick="addManual()">إتمام القيد</button>
-                </div>
-            </div>
-
-        </div>
+        </main>
     </div>
 
     <script>
-        // نظام الحماية
-        function checkPin() {
-            const pin = document.getElementById('pinInput').value;
-            if (pin === "2026") {
-                document.getElementById('pin-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                document.body.style.backgroundColor = "#fcfaf7";
-                updateUI();
+        const pinIn = document.getElementById('pin-input-v3');
+        const dots = document.querySelectorAll('.dot-v3');
+
+        // تحديث النقاط البصرية
+        pinIn.addEventListener('input', (e) => {
+            const val = e.target.value;
+            dots.forEach((dot, index) => {
+                if (index < val.length) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+            // دخول تلقائي عند اكتمال الرمز
+            if (val.length === 4) setTimeout(checkHedayaAccess, 300);
+        });
+
+        function checkHedayaAccess() {
+            if (pinIn.value === "2026") {
+                const gate = document.getElementById('auth-gate-screen');
+                gate.style.opacity = '0';
+                setTimeout(() => {
+                    gate.style.display = 'none';
+                    document.getElementById('compass-ui-v3').style.display = 'block';
+                    document.body.style.backgroundColor = "#F8FAFB";
+                    document.body.style.overflow = "auto";
+                }, 500);
             } else {
-                document.getElementById('error-msg').classList.remove('hidden');
-                document.getElementById('pinInput').value = '';
+                if(pinIn.value.length === 4) {
+                    alert("الرمز غير صحيح يا مديرة هدايه");
+                    pinIn.value = '';
+                    dots.forEach(d => d.classList.remove('active'));
+                }
             }
         }
 
-        // منطق البوصلة (المدمج من كودك)
-        let records = JSON.parse(localStorage.getItem('hedaya_records_v3')) || [];
-        let myChart = null;
-
-        function toggleMenu() {
-            document.getElementById('side-menu').classList.toggle('open');
-            document.getElementById('overlay').classList.toggle('hidden');
-        }
-
-        function showSection(id, element) {
-            document.querySelectorAll('[id^="section-"]').forEach(s => s.classList.add('hidden'));
-            document.getElementById('section-' + id).classList.remove('hidden');
-            document.querySelectorAll('.nav-icon-link').forEach(link => link.classList.remove('active'));
-            if(element) element.classList.add('active');
-            if(document.getElementById('side-menu').classList.contains('open')) toggleMenu();
-            updateUI();
-        }
-
-        function addTrade() {
-            const type = document.getElementById('sale-type').value;
-            const name = document.getElementById('party-name').value;
-            const price = parseFloat(document.getElementById('item-price').value) || 0;
-            if(price <= 0 || !name) return;
-            records.unshift({ name, amount: price, type, category: type === 'sale' ? 'إيرادات' : 'نفقات', date: new Date().toISOString() });
-            localStorage.setItem('hedaya_records_v3', JSON.stringify(records));
-            showSection('dashboard');
-        }
-
-        function addManual() {
-            const target = document.getElementById('entry-target').value;
-            const amount = parseFloat(document.getElementById('entry-amount').value) || 0;
-            if(amount <= 0) return;
-            records.unshift({ name: 'قيد تسوية', amount, type: 'manual', target, category: 'مركز مالي', date: new Date().toISOString() });
-            localStorage.setItem('hedaya_records_v3', JSON.stringify(records));
-            showSection('dashboard');
-        }
-
-        function updateUI() {
-            let inflow = 0, outflow = 0, assets = 0, liabs = 0, equity = 0;
-            const log = document.getElementById('records-list');
-            if (log) log.innerHTML = '';
-
-            records.forEach(r => {
-                if(r.type === 'sale') inflow += r.amount;
-                else if(r.type === 'purchase') outflow += r.amount;
-                else if(r.type === 'manual') {
-                    if(r.target === 'asset') assets += r.amount;
-                    if(r.target === 'liab') liabs += r.amount;
-                    if(r.target === 'equity') equity += r.amount;
-                }
-                if (log) {
-                    log.innerHTML += `<div class="flex justify-between p-4 bg-white rounded-2xl shadow-sm border-r-4 border-[#D4AF37]">
-                        <span class="font-black">$${r.amount.toLocaleString()}</span>
-                        <span class="font-bold text-[#1A3F75]">${r.name}</span>
-                    </div>`;
-                }
-            });
-
-            document.getElementById('display-inflow').innerText = inflow.toLocaleString();
-            document.getElementById('display-outflow').innerText = outflow.toLocaleString();
-            document.getElementById('asset-total').innerText = `$${assets.toLocaleString()}`;
-            document.getElementById('liab-total').innerText = `$${liabs.toLocaleString()}`;
-            document.getElementById('equity-total').innerText = `$${equity.toLocaleString()}`;
-            initChart(inflow, outflow, assets, liabs, equity);
-        }
-
-        function initChart(inf, out, ast, lib, eqt) {
-            const ctx = document.getElementById('financeChart').getContext('2d');
-            if (myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['إيرادات', 'نفقات', 'أصول', 'التزامات', 'حقوق'],
-                    datasets: [{ data: [inf||1, out, ast, lib, eqt], backgroundColor: ['#D4AF37', '#1A3F75', '#00002A', '#7DA0CA', '#F1E5AC'], borderWidth: 0 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        function calcProfit() {
-            const cost = parseFloat(document.getElementById('calc-cost').value) || 0;
-            const price = parseFloat(document.getElementById('calc-price').value) || 0;
-            const net = price - cost;
-            document.getElementById('calc-net').innerText = net.toLocaleString();
-            document.getElementById('calc-margin').innerText = (price > 0 ? (net/price*100).toFixed(1) : 0) + "%";
-        }
-
-        document.getElementById('pinInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') checkPin(); });
+        // تفاعل شاشة الدخول
+        document.getElementById('auth-gate-screen').addEventListener('click', () => pinIn.focus());
+        window.onload = () => pinIn.focus();
     </script>
 </body>
 </html>
+
