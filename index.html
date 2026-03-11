@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوصلة هدايه - النظام المحمي</title>
+    <title>بوصلة هدايه - الإصدار المحاسبي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -11,11 +11,14 @@
         :root {
             --royal-blue: #040924;
             --gold-primary: #D4AF37;
+            --gold-light: #F1E5AC;
+            --deep-sea: #1A3F75;
+            --accounting-blue: #00002A;
         }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--royal-blue); margin: 0; overflow-x: hidden; }
-        
-        /* شاشة تسجيل الدخول - تصميم الصورة */
-        #auth-container {
+        body { font-family: 'Cairo', sans-serif; background-color: var(--royal-blue); margin: 0; overflow: hidden; }
+
+        /* شاشة الدخول بالرمز */
+        #pin-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--royal-blue); z-index: 9999;
             display: flex; align-items: center; justify-content: center;
@@ -26,137 +29,170 @@
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 40px; border: 2px solid var(--gold-primary);
         }
-        .logo-text { font-size: 40px; font-weight: 900; color: var(--royal-blue); }
+        .logo-text { font-size: 40px; font-weight: 900; color: var(--accounting-blue); }
         
-        .auth-input {
-            width: 100%; padding: 15px; margin: 10px 0; background: transparent;
+        .pin-input {
+            width: 100%; padding: 15px; background: transparent;
             border: none; border-bottom: 2px solid var(--gold-primary);
-            color: white; text-align: center; font-size: 18px; outline: none;
+            color: white; text-align: center; font-size: 24px; letter-spacing: 10px; outline: none;
         }
         .btn-gold {
             width: 100%; padding: 15px; background: var(--gold-primary);
-            color: var(--royal-blue); border-radius: 30px; border: none;
+            color: var(--accounting-blue); border-radius: 30px; border: none;
             font-weight: 900; font-size: 18px; margin-top: 30px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
-        /* تنسيقات البوصلة الأصلية */
-        .dark-card { background-color: #00002A; color: white; border-radius: 40px; border: 1px solid var(--gold-primary); }
-        .stat-card { padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        /* تنسيقات البوصلة (بعد الدخول) */
+        #main-content { display: none; background-color: #fcfaf7; min-height: 100vh; overflow-x: hidden; }
+        .dark-card { background-color: var(--accounting-blue); color: white; border-radius: 40px; border: 1px solid var(--gold-primary); }
+        .stat-card { padding: 30px; margin-bottom: 15px; box-shadow: 0 20px 40px rgba(0,0,42,0.3); }
         .stat-card .value { font-size: 34px; font-weight: 900; color: var(--gold-primary); }
-        .white-card { background: white; border-radius: 35px; padding: 25px; }
+        .white-card { background: white; border-radius: 35px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         #side-menu { transition: 0.4s; transform: translateX(100%); }
         #side-menu.open { transform: translateX(0); }
     </style>
 </head>
 <body>
 
-    <div id="auth-container">
+    <div id="pin-screen">
         <div class="login-box">
             <div class="logo-box"><span class="logo-text">H</span></div>
-            <input type="email" id="email" class="auth-input" placeholder="البريد الإلكتروني">
-            <input type="password" id="password" class="auth-input" placeholder="كلمة السر">
-            <button class="btn-gold" onclick="handleLogin()">دخول</button>
-            <p id="auth-message" class="text-red-500 mt-4 text-sm"></p>
+            <input type="password" id="pinInput" class="pin-input" placeholder="****" maxlength="4">
+            <button class="btn-gold" onclick="checkPin()">دخول</button>
+            <p id="error-msg" class="text-red-500 mt-4 hidden">الرمز غير صحيح</p>
         </div>
     </div>
 
-    <div id="product-content" class="hidden">
+    <div id="main-content">
         <div id="overlay" class="fixed inset-0 bg-black/60 hidden z-[90]" onclick="toggleMenu()"></div>
 
-        <div id="side-menu" class="fixed top-0 right-0 h-full w-[100px] bg-white z-[100] flex flex-col items-center pt-24 border-l border-gold-primary">
-            <div class="nav-icon-link p-4 mb-4 bg-slate-100 rounded-xl" onclick="showSection('dashboard')">🏠</div>
-            <div class="nav-icon-link p-4 mb-4 bg-slate-100 rounded-xl" onclick="showSection('sales-entry')">🛒</div>
-            <div class="nav-icon-link p-4 mb-4 bg-slate-100 rounded-xl" onclick="handleLogout()">🚪</div>
+        <div id="side-menu" class="fixed top-0 right-0 h-full w-[100px] bg-white shadow-2xl z-[100] flex flex-col items-center pt-24 border-l border-gold-primary">
+            <div class="p-4 mb-4 bg-slate-100 rounded-xl cursor-pointer" onclick="showSection('dashboard')">🏠</div>
+            <div class="p-4 mb-4 bg-slate-100 rounded-xl cursor-pointer" onclick="showSection('sales-entry')">🛒</div>
+            <div class="p-4 mb-4 bg-red-50 rounded-xl cursor-pointer" onclick="location.reload()">🚪</div>
         </div>
 
-        <div class="max-w-md mx-auto min-h-screen p-6 bg-[#fcfaf7]">
+        <div class="max-w-md mx-auto p-6 relative">
             <header class="flex justify-between items-center mb-10">
-                <button onclick="toggleMenu()" class="p-3 bg-[#00002A] rounded-xl border border-[#D4AF37]">☰</button>
+                <div class="p-3 bg-[#00002A] rounded-xl border border-[#D4AF37] cursor-pointer" onclick="toggleMenu()">☰</div>
                 <div class="text-right">
                     <h1 class="text-2xl font-black text-[#00002A]">بوصلة هدايه</h1>
-                    <p class="text-[10px] text-[#D4AF37] font-bold">الوعي المالي والوضوح الرقمي</p>
+                    <p class="text-[11px] text-[#D4AF37] font-bold uppercase tracking-widest">الوعي المالي والوضوح الرقمي</p>
                 </div>
-                <div class="w-12 h-12 dark-card flex items-center justify-center font-black text-[#D4AF37]">H</div>
+                <div class="w-14 h-14 dark-card flex items-center justify-center text-2xl font-black text-[#D4AF37]">H</div>
             </header>
 
             <div id="section-dashboard" class="space-y-4">
                 <div class="dark-card stat-card">
-                    <p class="text-slate-400 text-xs font-bold">إجمالي الإيرادات</p>
-                    <div class="value">$<span id="display-inflow">0</span></div>
+                    <p class="text-slate-400 text-xs font-bold uppercase">إجمالي الإيرادات</p>
+                    <div class="value mt-1">$<span id="display-inflow">0</span></div>
                 </div>
                 <div class="dark-card stat-card" style="background-color: #000035;">
-                    <p class="text-slate-400 text-xs font-bold">إجمالي النفقات</p>
-                    <div class="value">$<span id="display-outflow">0</span></div>
+                    <p class="text-slate-400 text-xs font-bold uppercase">إجمالي النفقات</p>
+                    <div class="value mt-1">$<span id="display-outflow">0</span></div>
                 </div>
                 
                 <div class="white-card mt-6">
-                    <h3 class="font-black border-r-4 border-[#D4AF37] pr-3 mb-4">القيود اليومية</h3>
-                    <div id="records-list" class="space-y-3 text-sm"></div>
-                    <canvas id="financeChart" class="mt-6"></canvas>
+                    <h3 class="font-black border-r-4 border-[#D4AF37] pr-3 mb-4 text-lg text-[#00002A]">القيود اليومية</h3>
+                    <div id="records-list" class="space-y-3 text-sm mb-6"></div>
+                    <div style="position: relative; height:300px; width:100%">
+                        <canvas id="financeChart"></canvas>
+                    </div>
                 </div>
             </div>
-            
+
+            <div id="section-sales-entry" class="hidden space-y-6">
+                <div class="white-card">
+                    <h2 class="text-xl font-black mb-6 text-[#D4AF37]">تسجيل حركة تجارية</h2>
+                    <input type="text" id="party-name" placeholder="البيان" class="w-full p-4 bg-slate-50 rounded-2xl mb-4 outline-none">
+                    <input type="number" id="item-price" placeholder="القيمة النقدية" class="w-full p-4 bg-slate-50 rounded-2xl mb-4 outline-none">
+                    <button class="w-full p-4 bg-[#00002A] text-[#D4AF37] font-bold rounded-2xl" onclick="addTrade()">ترحيل القيد</button>
+                </div>
             </div>
+        </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        // املئي بيانات Firebase هنا
-        const firebaseConfig = {
-            apiKey: "AIzaSy...", 
-            authDomain: "your-id.firebaseapp.com",
-            projectId: "your-id",
-            appId: "1:..."
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // وظائف الدخول
-        window.handleLogin = () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            signInWithEmailAndPassword(auth, email, pass).catch(e => {
-                document.getElementById('auth-message').innerText = "خطأ في بيانات الدخول";
-            });
-        };
-
-        window.handleLogout = () => signOut(auth);
-
-        // مراقبة الحالة
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('auth-container').classList.add('hidden');
-                document.getElementById('product-content').classList.remove('hidden');
-                updateUI(); // تشغيل حسابات البوصلة
+    <script>
+        // 1. منطق رمز الدخول
+        function checkPin() {
+            const pin = document.getElementById('pinInput').value;
+            if (pin === "2026") {
+                document.getElementById('pin-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.body.style.overflow = 'auto';
+                updateUI();
             } else {
-                document.getElementById('auth-container').classList.remove('hidden');
-                document.getElementById('product-content').classList.add('hidden');
+                document.getElementById('error-msg').classList.remove('hidden');
+                document.getElementById('pinInput').value = '';
             }
-        });
+        }
 
-        // --- منطق البوصلة المحاسبي (مختصر) ---
-        window.toggleMenu = () => {
+        // 2. منطق البوصلة المحاسبي
+        let records = JSON.parse(localStorage.getItem('hedaya_records_v3')) || [];
+        let myChart = null;
+
+        function toggleMenu() {
             document.getElementById('side-menu').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('hidden');
-        };
+        }
 
-        let records = JSON.parse(localStorage.getItem('hedaya_records_v3')) || [];
-        
-        window.updateUI = () => {
+        function showSection(id) {
+            document.querySelectorAll('[id^="section-"]').forEach(s => s.classList.add('hidden'));
+            document.getElementById('section-' + id).classList.remove('hidden');
+            if(document.getElementById('side-menu').classList.contains('open')) toggleMenu();
+        }
+
+        function addTrade() {
+            const name = document.getElementById('party-name').value;
+            const price = parseFloat(document.getElementById('item-price').value) || 0;
+            if(price <= 0 || !name) return;
+
+            records.unshift({ name, amount: price, type: 'sale', date: new Date().toISOString() });
+            localStorage.setItem('hedaya_records_v3', JSON.stringify(records));
+            document.getElementById('party-name').value = '';
+            document.getElementById('item-price').value = '';
+            showSection('dashboard');
+            updateUI();
+        }
+
+        function updateUI() {
             let inflow = 0, outflow = 0;
             const log = document.getElementById('records-list');
-            log.innerHTML = '';
+            if (log) log.innerHTML = '';
+
             records.forEach(r => {
                 if(r.type === 'sale') inflow += r.amount;
-                else outflow += r.amount;
-                log.innerHTML += `<div class="p-3 bg-slate-50 rounded-xl flex justify-between"><span>$${r.amount}</span><span>${r.name}</span></div>`;
+                if (log) {
+                    log.innerHTML += `<div class="flex justify-between p-4 bg-slate-50 rounded-2xl">
+                        <span class="font-black">$${r.amount}</span>
+                        <span class="font-bold text-[#1A3F75]">${r.name}</span>
+                    </div>`;
+                }
             });
+
             document.getElementById('display-inflow').innerText = inflow.toLocaleString();
-            document.getElementById('display-outflow').innerText = outflow.toLocaleString();
-        };
+            initChart(inflow, outflow);
+        }
+
+        function initChart(in, out) {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            if (myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['إيرادات', 'نفقات'],
+                    datasets: [{
+                        data: [in || 1, out || 0],
+                        backgroundColor: ['#D4AF37', '#1A3F75'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        document.getElementById('pinInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') checkPin(); });
     </script>
 </body>
 </html>
