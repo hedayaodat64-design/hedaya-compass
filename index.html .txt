@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام السيادة المالي | هدايه</title>
+    <title>نظام التحليل المالي | هدايه</title>
     <!-- Tailwind CSS for Styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -65,8 +65,8 @@
                             <div class="inline-flex p-4 bg-white/10 rounded-full mb-4">
                                 <i data-lucide="lock" class="text-emerald-400 w-8 h-8"></i>
                             </div>
-                            <h2 class="text-2xl font-bold">نظام السيادة المالي</h2>
-                            <p class="text-indigo-200 text-sm mt-2">أدخل الرمز الخاص بالمديرة هدايه</p>
+                            <h2 class="text-2xl font-bold">نظام التحليل المالي</h2>
+                            <p class="text-indigo-200 text-sm mt-2">أدخل الرمز الخاص ب هدايه</p>
                         </div>
                         <div class="p-8 space-y-6">
                             <input type="password" id="passInput" placeholder="••••" 
@@ -86,7 +86,7 @@
                 state.isAuthenticated = true;
                 updateUI();
             } else {
-                alert('الرمز غير صحيح يا هدايه');
+                alert('الرمز غير صحيح');
             }
         }
 
