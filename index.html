@@ -208,6 +208,67 @@
         localStorage.setItem('hedaya_v4_final', JSON.stringify(records));
         updateUI();
     }
+// دالة حساب الربحية لبوصلة هدايه
+function calcProfit() {
+    try {
+        // جلب القيم من الـ IDs التي أرسلتِها في الكود السابق
+        const costInput = document.getElementById('calc-cost');
+        const priceInput = document.getElementById('calc-price');
+        const opexInput = document.getElementById('calc-opex');
+
+        const cost = parseFloat(costInput.value) || 0;
+        const price = parseFloat(priceInput.value) || 0;
+        const opex = parseFloat(opexInput.value) || 0;
+
+        // المعادلة المحاسبية: الربح = السعر - (التكلفة + المصاريف)
+        const netProfit = price - (cost + opex);
+        
+        // حساب الهامش
+        const margin = price > 0 ? (netProfit / price) * 100 : 0;
+
+        // تحديث الأرقام في الواجهة (calc-net و calc-margin)
+        const netDisplay = document.getElementById('calc-net');
+        const marginDisplay = document.getElementById('calc-margin');
+
+        if (netDisplay) netDisplay.innerText = netProfit.toLocaleString();
+        if (marginDisplay) marginDisplay.innerText = margin.toFixed(0) + "%";
+        
+    } catch (error) {
+        console.error("خطأ في حساب الربحية:", error);
+    }
+}
+
+// دالة ترحيل الربح إلى السجل العام لزيادة الوفرة
+function saveProfitEntry() {
+    const client = document.getElementById('calc-client').value || "عملية بيع";
+    const netProfit = parseFloat(document.getElementById('calc-net').innerText.replace(/,/g, '')) || 0;
+
+    
+
+    // إضافة الربح كإيراد (Sale) لزيادة الأصول والملكية
+    const record = {
+        id: Date.now(),
+        name: `ربح من: ${client}`,
+        amount: netProfit,
+        type: 'sale',
+        date: new Date().toISOString()
+    };
+
+    if (typeof records !== 'undefined') {
+        records.push(record);
+        if (typeof saveData === 'function') saveData();
+        if (typeof updateUI === 'function') updateUI();
+        
+        alert("تم ترحيل الربح بنجاح! . ✅");
+        
+        // تصفير الخانات
+        document.getElementById('calc-client').value = "";
+        document.getElementById('calc-cost').value = "";
+        document.getElementById('calc-price').value = "";
+        document.getElementById('calc-opex').value = "";
+        calcProfit();
+    }
+}
 
     // 3. التنقل بين الأقسام
     function toggleMenu() {
