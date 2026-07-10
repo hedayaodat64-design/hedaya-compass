@@ -3,48 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوصلة هدايه - الإصدار المصحح</title>
+    <title>The Compass - </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* كود شاشة الحماية */
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #fcfaf7; 
+            color: #1a1a1a; 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+        :root { 
+            --royal-blue: #00002A; 
+            --gold-primary: #D4AF37; 
+            --gold-light: #F1E5AC; 
+            --deep-sea: #1A3F75; 
+        }
+        
+        /* شاشة الحماية وقفل الدخول */
         #hedaya-lock-screen {
-            position: fixed; inset: 0; background-color: #00002A;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 10000; transition: opacity 0.6s ease-in-out; font-family: 'Cairo', sans-serif;
+            position: fixed; 
+            inset: 0; 
+            background-color: var(--royal-blue);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            z-index: 10000; 
+            transition: opacity 0.6s ease-in-out; 
         }
         .h-lock-frame {
-            width: 120px; height: 120px; background: white; border-radius: 35px;
-            display: flex; align-items: center; justify-content: center;
-            border: 3px solid #D4AF37; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            width: 120px; 
+            height: 120px; 
+            background: white; 
+            border-radius: 35px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            border: 3px solid var(--gold-primary); 
+            margin-bottom: 40px; 
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
         }
         .pin-input-hedaya {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid #D4AF37;
-            border-radius: 15px; padding: 12px; color: #D4AF37; text-align: center;
-            font-size: 28px; letter-spacing: 12px; width: 180px; margin-bottom: 30px; outline: none;
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid var(--gold-primary);
+            border-radius: 15px; 
+            padding: 12px; 
+            color: var(--gold-primary); 
+            text-align: center;
+            font-size: 28px; 
+            letter-spacing: 12px; 
+            width: 180px; 
+            margin-bottom: 30px; 
+            outline: none;
         }
         .btn-lock-entry {
-            background: #D4AF37; color: #00002A; padding: 14px 80px;
-            border-radius: 50px; font-weight: 900; cursor: pointer; border: none; transition: 0.3s;
+            background: var(--gold-primary); 
+            color: var(--royal-blue); 
+            padding: 14px 80px;
+            border-radius: 50px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            transition: 0.3s;
         }
-        #error-msg-h { color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none; font-weight: bold; }
+        
+        /* تنسيق كروت الميزانية */
+        .balance-card {
+            background: white;
+            border-radius: 50px;
+            padding: 20px 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1.5px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .card-assets { border-left: 15px solid var(--royal-blue); }
+        .card-liabilities { border-left: 15px solid var(--deep-sea); }
+        .card-equity { border-left: 15px solid var(--gold-primary); }
 
-        /* التنسيقات العامة */
-        body { font-family: 'Cairo', sans-serif; background-color: #fcfaf7; color: #1a1a1a; margin: 0; overflow-x: hidden; }
-        :root { --royal-blue: #00002A; --gold-primary: #D4AF37; --gold-light: #F1E5AC; --gold-dark: #AA8831; --deep-sea: #1A3F75; }
-        .dark-card { background-color: var(--royal-blue); color: white; border-radius: 40px; border: 1px solid var(--gold-primary); }
-        #side-menu { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); }
+        /* القائمة الجانبية للتنقل */
+        #side-menu { 
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform: translateX(100%); 
+        }
         #side-menu.open { transform: translateX(0); }
-        .menu-btn { width: 50px; height: 50px; background: var(--royal-blue); border-radius: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; cursor: pointer; border: 1px solid var(--gold-primary); }
-        .menu-btn div { width: 25px; height: 3px; background: var(--gold-primary); border-radius: 2px; }
-        .nav-icon-link { width: 60px; height: 60px; background: var(--deep-sea); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--gold-light); transition: 0.3s; cursor: pointer; }
-        .nav-icon-link.active { background: var(--gold-primary); color: var(--royal-blue); box-shadow: 0 0 15px var(--gold-primary); }
-        .stat-card { padding: 30px; margin-bottom: 15px; position: relative; box-shadow: 0 20px 40px rgba(0,0,42,0.3); overflow: hidden; }
+        
+        .nav-icon-link { 
+            width: 60px; 
+            height: 60px; 
+            background: var(--deep-sea); 
+            border-radius: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 20px; 
+            color: var(--gold-light); 
+            transition: 0.3s; 
+            cursor: pointer; 
+        }
+        .nav-icon-link.active { 
+            background: var(--gold-primary); 
+            color: var(--royal-blue); 
+            box-shadow: 0 0 15px var(--gold-primary); 
+        }
+        
+        .dark-card { 
+            background-color: var(--royal-blue); 
+            color: white; 
+            border-radius: 40px; 
+            border: 1px solid var(--gold-primary); 
+        }
+        .stat-card { padding: 30px; margin-bottom: 15px; box-shadow: 0 20px 40px rgba(0,0,42,0.25); }
         .stat-card .value { font-size: 34px; font-weight: 900; color: var(--gold-primary); }
-        .white-card { background: white; border-radius: 35px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .btn-action { background: linear-gradient(135deg, var(--royal-blue) 0%, var(--deep-sea) 100%); color: var(--gold-primary); font-weight: 900; padding: 12px; border-radius: 15px; width: 100%; margin-top: 10px; border: 1px solid var(--gold-primary); }
-        .record-item { border-right: 4px solid var(--gold-primary); }
+        
+        .quick-input-group input {
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
+            transition: all 0.2s;
+        }
+        .quick-input-group input:focus {
+            border-color: var(--gold-primary);
+            background-color: #fffdf9;
+        }
         svg.filled { fill: currentColor; }
     </style>
 </head>
@@ -54,29 +139,27 @@
         <div class="h-lock-frame"><span style="font-size: 65px; font-weight: 900; color: #00002A;">H</span></div>
         <input type="password" id="hedaya-pin" class="pin-input-hedaya" placeholder="••••" maxlength="4">
         <button class="btn-lock-entry" onclick="checkHedaiaLock()">دخول</button>
-        <p id="error-msg-h">الرمز غير صحيح</p>
+        <p id="error-msg-h" class="text-red-400 font-bold mt-4 hidden">الرمز غير صحيح</p>
     </div>
 
     <div id="overlay" class="fixed inset-0 bg-black/60 hidden z-[90]" onclick="toggleMenu()"></div>
 
-    <div id="side-menu" class="fixed top-0 right-0 h-full w-[100px] bg-white shadow-2xl z-[100] flex flex-col items-center pt-24 border-l border-gold-primary">
+    <div id="side-menu" class="fixed top-0 right-0 h-full w-[100px] bg-white shadow-2xl z-[100] flex flex-col items-center pt-24 border-l border-[#D4AF37]">
         <div class="nav-icon-link active" title="لوحة التحكم" onclick="showSection('dashboard', this)">
             <svg class="filled" width="28" height="28" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </div>
-        <div class="nav-icon-link" title="القيود اليدوية" onclick="showSection('manual-entry', this)">
-            <svg class="filled" width="28" height="28" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-        </div>
-        <div class="nav-icon-link" title="المبيعات" onclick="showSection('sales-entry', this)">
-            <svg class="filled" width="28" height="28" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-        </div>
-        <div class="nav-icon-link" title="التحليل" onclick="showSection('profit-calc', this)">
-            <svg class="filled" width="28" height="28" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-        </div>
-        <div class="nav-icon-link" title="الميزانية" onclick="showSection('sovereign', this)">
+        <div class="nav-icon-link" title=" والمدخلات السريعة" onclick="showSection('sovereign', this)">
             <svg class="filled" width="28" height="28" viewBox="0 0 24 24">
                 <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
             </svg>
         </div>
+        <div class="nav-icon-link" title="المبيعات والتجارة" onclick="showSection('sales-entry', this)">
+            <svg class="filled" width="28" height="28" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        </div>
+        <div class="nav-icon-link" title="تحليل الربحية" onclick="showSection('profit-calc', this)">
+            <svg class="filled" width="28" height="28" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        </div>
+
         <div class="nav-icon-link" title="تصدير إكسل (Excel)" onclick="exportExcel()">
             <svg class="filled" width="28" height="28" viewBox="0 0 24 24">
                 <path d="M2.2 2h19.6c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H2.2c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2zm1.6 4v3.6h4.8V6H3.8zm0 5.6V15h4.8v-3.4H3.8zm0 5.4v3.4h4.8V17H3.8zM10.2 6v3.6h4.8V6h-4.8zm0 5.6V15h4.8v-3.4h-4.8zm0 5.4v3.4h4.8V17h-4.8zM16.6 6v3.6h4.8V6h-4.8zm3.2 5.6h1.6V15-1.6v-3.4zM16.6 17v3.4h1.6V17h-1.6zM2 4v16h20V4H2zM15 8h2.6L19 12l1.4-4h2.6l-3.2 8h-2.6l-3.2-8h2.6l1.2 3 1.2-3H15v8h-2V8h2z"/>
@@ -84,174 +167,173 @@
         </div>
     </div>
 
-    <div class="max-w-md mx-auto min-h-screen p-6 relative">
-        <header class="flex justify-between items-center mb-10">
-            <div class="menu-btn" onclick="toggleMenu()"><div></div><div></div><div></div></div>
+    <div class="max-w-6xl mx-auto min-h-screen p-6 relative">
+        
+        <header class="flex justify-between items-center mb-8">
+            <button class="w-12 h-12 bg-[#00002A] rounded-xl flex flex-col justify-center items-center gap-1.5 border border-[#D4AF37]" onclick="toggleMenu()">
+                <div class="w-6 h-0.5 bg-[#D4AF37]"></div><div class="w-6 h-0.5 bg-[#D4AF37]"></div><div class="w-6 h-0.5 bg-[#D4AF37]"></div>
+            </button>
             <div class="text-right">
                 <h1 class="text-2xl font-black text-[#00002A]">The Compass</h1>
-                <p class="text-[11px] text-[#D4AF37] font-bold uppercase tracking-widest">الوعي المالي والوضوح الرقمي</p>
+                <p class="text-[10px] text-[#D4AF37] font-bold tracking-widest">الوعي المالي والوضوح الرقمي</p>
             </div>
-            <div class="w-14 h-14 dark-card flex items-center justify-center text-2xl font-black text-[#D4AF37] border-2 border-[#D4AF37] shadow-lg">H</div>
+            <div class="w-12 h-12 dark-card flex items-center justify-center text-xl font-black text-[#D4AF37] border border-[#D4AF37] shadow">H</div>
         </header>
 
         <div id="section-dashboard" class="space-y-4">
-            <div class="dark-card stat-card">
-                <p class="text-slate-400 text-xs font-bold uppercase">إجمالي الإيرادات</p>
-                <div class="value mt-1">$<span id="display-inflow">0</span></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="dark-card stat-card rounded-[35px]">
+                    <p class="text-slate-400 text-xs font-bold">إجمالي الإيرادات </p>
+                    <div class="value mt-1">$<span id="display-inflow">0</span></div>
+                </div>
+                <div class="dark-card stat-card rounded-[35px]" style="background-color: #000035;">
+                    <p class="text-slate-400 text-xs font-bold">إجمالي النفقات </p>
+                    <div class="value mt-1 text-red-400">$<span id="display-outflow">0</span></div>
+                </div>
             </div>
-            <div class="dark-card stat-card" style="background-color: #000035;">
-                <p class="text-slate-400 text-xs font-bold uppercase">إجمالي النفقات</p>
-                <div class="value mt-1 text-red-400">$<span id="display-outflow">0</span></div>
-            </div>
-            <div class="white-card mt-6">
-                <h3 class="font-black border-r-4 border-[#D4AF37] pr-3 mb-4 text-lg">العمليات اليومية</h3>
-                <div id="records-list" class="space-y-3 text-sm"></div>
-                <div class="mt-8 h-64"><canvas id="financeChart"></canvas></div>
+            <div class="bg-white p-6 rounded-[35px] border border-slate-100 shadow-sm mt-4">
+                <h3 class="font-black border-r-4 border-[#D4AF37] pr-3 mb-4 text-base">سجل العمليات اليومية</h3>
+                <div id="records-list" class="space-y-3 text-sm max-h-60 overflow-y-auto"></div>
+                <div class="mt-6 h-64"><canvas id="financeChart"></canvas></div>
             </div>
         </div>
 
         <div id="section-sovereign" class="hidden space-y-6">
-            <h2 class="text-2xl font-black mb-4 text-[#00002A]">الميزانية العمومية</h2>
-            <div class="white-card border-r-8 border-[#00002A] flex justify-between items-center"><div>الأصول (Assets)</div><span id="asset-total" class="font-black text-xl">$0</span></div>
-            <div class="white-card border-r-8 border-[#1A3F75] flex justify-between items-center"><div>الالتزامات (Liabilities)</div><span id="liab-total" class="font-black text-xl">$0</span></div>
-            <div class="white-card border-r-8 border-[#D4AF37] flex justify-between items-center"><div>حقوق الملكية (Equity)</div><span id="equity-total" class="font-black text-xl">$0</span></div>
-            <div class="text-center text-[10px] text-gray-400 font-bold mt-4" id="equation-check">0</div>
-        </div>
-
-        <div id="section-manual-entry" class="hidden space-y-6">
-            <div class="white-card">
-                <h2 class="text-xl font-black mb-6 text-[#D4AF37]">قيد تسوية</h2>
-                <div class="space-y-4">
-                    <select id="manual-type" class="w-full p-4 bg-slate-50 rounded-2xl font-bold">
-                        <option value="asset-plus">زيادة في الأصول (+)</option>
-                        <option value="asset-minus">نقص في الأصول (-)</option>
-                        <option value="liab-plus">زيادة في الالتزامات (+)</option>
-                        <option value="liab-minus">نقص في الالتزامات (-)</option>
-                        <option value="equity-plus">زيادة في الملكية (+)</option> 
-                        <option value="equity-minus">نقص في الملكية (-)</option>
-                    </select>
-                    <input type="number" id="manual-amount" placeholder="المبلغ" class="w-full p-4 bg-slate-50 rounded-2xl outline-none">
-                    <input type="text" id="manual-desc" placeholder="البيان" class="w-full p-4 bg-slate-50 rounded-2xl outline-none">
-                    <button class="btn-action py-4" onclick="addManualEntry()">حفظ القيد</button>
+            <h2 class="text-xl font-black text-[#00002A] mb-4 border-r-4 border-[#D4AF37] pr-2">قائمة المركز المالي</h2>
+            
+            <div class="space-y-3 bg-white p-4 rounded-[35px] border border-slate-100 shadow-sm">
+                <div class="balance-card card-assets">
+                    <span id="asset-total" class="font-black text-2xl text-[#00002A]">$0</span>
+                    <div class="font-bold text-slate-700 text-base">الأصول (Assets)</div>
+                </div>
+                <div class="flex items-center gap-1.5 quick-input-group">
+                    <button onclick="quickAddFlexible('asset', 'quick-asset-desc', 'quick-asset-amount', 'plus')" class="w-11 h-14 bg-[#00002A] text-[#D4AF37] hover:bg-[#1A3F75] rounded-xl flex items-center justify-center font-bold text-xl shadow shrink-0" title="زيادة أصول">+</button>
+                    <button onclick="quickAddFlexible('asset', 'quick-asset-desc', 'quick-asset-amount', 'minus')" class="w-11 h-14 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 rounded-xl flex items-center justify-center font-bold text-xl shadow shrink-0" title="نقص أصول">-</button>
+                    <input type="number" id="quick-asset-amount" placeholder="القيمة " class="w-20 p-4 rounded-xl font-bold text-center outline-none text-xs text-slate-800">
+                    <input type="text" id="quick-asset-desc" placeholder="مثال:كاش،ذمم مدينة، بضاعة" class="flex-1 p-4 rounded-xl font-bold outline-none text-xs text-slate-700">
+                </div>
+                <div class="overflow-hidden rounded-xl border border-slate-100 text-[11px] mt-2">
+                    <table class="w-full text-right bg-slate-50/50">
+                        <thead class="bg-slate-100/70 text-slate-600 font-bold">
+                            <tr><th class="p-2 text-center w-12">حذف</th><th class="p-2 text-center w-24">القيمة</th><th class="p-2">البند</th></tr>
+                        </thead>
+                        <tbody id="table-assets-body"></tbody>
+                    </table>
                 </div>
             </div>
+
+            <div class="space-y-3 bg-white p-4 rounded-[35px] border border-slate-100 shadow-sm">
+                <div class="balance-card card-liabilities">
+                    <span id="liab-total" class="font-black text-2xl text-[#1A3F75]">$0</span>
+                    <div class="font-bold text-slate-700 text-base">الالتزامات (Liabilities)</div>
+                </div>
+                <div class="flex items-center gap-1.5 quick-input-group">
+                    <button onclick="quickAddFlexible('liab', 'quick-liab-desc', 'quick-liab-amount', 'plus')" class="w-11 h-14 bg-[#1A3F75] text-white hover:bg-[#2B5C9E] rounded-xl flex items-center justify-center font-bold text-xl shadow shrink-0" title="زيادة التزامات">+</button>
+                    <button onclick="quickAddFlexible('liab', 'quick-liab-desc', 'quick-liab-amount', 'minus')" class="w-11 h-14 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 rounded-xl flex items-center justify-center font-bold text-xl shadow shrink-0" title="نقص التزامات">-</button>
+                    <input type="number" id="quick-liab-amount" placeholder="القيمة" class="w-20 p-4 rounded-xl font-bold text-center outline-none text-xs text-slate-800">
+                    <input type="text" id="quick-liab-desc" placeholder=" مثال: دين، قرض،ذمم دائنة" class="flex-1 p-4 rounded-xl font-bold outline-none text-xs text-slate-700">
+                </div>
+                <div class="overflow-hidden rounded-xl border border-slate-100 text-[11px] mt-2">
+                    <table class="w-full text-right bg-slate-50/50">
+                        <thead class="bg-slate-100/70 text-slate-600 font-bold">
+                            <tr><th class="p-2 text-center w-12">حذف</th><th class="p-2 text-center w-24">القيمة</th><th class="p-2">البند</th></tr>
+                        </thead>
+                        <tbody id="table-liab-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="space-y-3 bg-white p-4 rounded-[35px] border border-slate-100 shadow-sm">
+                <div class="balance-card card-equity">
+                    <span id="equity-total" class="font-black text-2xl text-[#AA8831]">$0</span>
+                    <div class="font-bold text-slate-700 text-base">حقوق الملكية (Equity)</div>
+                </div>
+                <div class="flex items-center gap-1.5 quick-input-group">
+                    <button onclick="quickAddFlexible('equity', 'quick-equity-desc', 'quick-equity-amount', 'plus')" class="w-11 h-14 bg-[#D4AF37] text-[#00002A] hover:bg-[#AA8831] rounded-xl flex items-center justify-center font-bold text-xl shadow shrink-0" title="زيادة ملكية">+</button>
+                    <button onclick="quickAddFlexible('equity', 'quick-equity-desc', 'quick-equity-amount', 'minus')" class="w-11 h-14 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 rounded-xl flex items-center justify-center font-bold text-xl shadow shrink-0" title="نقص ملكية">-</button>
+                    <input type="number" id="quick-equity-amount" placeholder="القيمة" class="w-20 p-4 rounded-xl font-bold text-center outline-none text-xs text-slate-800">
+                    <input type="text" id="quick-equity-desc" placeholder="مثال: رأس المال،ارباح،مصاريف " class="flex-1 p-4 rounded-xl font-bold outline-none text-xs text-slate-700">
+                </div>
+                <div class="overflow-hidden rounded-xl border border-slate-100 text-[11px] mt-2">
+                    <table class="w-full text-right bg-slate-50/50">
+                        <thead class="bg-slate-100/70 text-slate-600 font-bold">
+                            <tr><th class="p-2 text-center w-12">حذف</th><th class="p-2 text-center w-24">القيمة</th><th class="p-2">البند</th></tr>
+                        </thead>
+                        <tbody id="table-equity-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-center text-xs font-black p-4 bg-white rounded-2xl border border-slate-100 shadow-sm" id="equation-check">0</div>
         </div>
 
-        <div id="section-profit-calc" class="hidden space-y-6">
-            <div class="white-card shadow-sm p-6 rounded-3xl bg-white">
-                <h2 class="text-xl font-black mb-4 text-[#D4AF37]">تحليل الربحية</h2>
-                <div class="space-y-4">
-                    <input type="text" id="calc-client" placeholder="اسم العميل/المنتج" class="w-full p-4 bg-slate-50 rounded-2xl outline-none border border-transparent focus:border-[#D4AF37] transition-all">
-                    <input type="number" id="calc-price" oninput="calcProfit()" placeholder="سعر البيع" class="w-full p-4 bg-slate-50 rounded-2xl outline-none border border-transparent focus:border-[#D4AF37] transition-all">
-                    <input type="number" id="calc-cost" oninput="calcProfit()" placeholder="تكلفة البضاعة المباعة (COGS)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none border border-transparent focus:border-[#D4AF37] transition-all">
-                    <input type="number" id="calc-opex" oninput="calcProfit()" placeholder="تغليف، توصيل، تسويق (OPEX)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none border border-transparent focus:border-[#D4AF37] transition-all">
+        <div id="section-profit-calc" class="hidden space-y-4">
+            <div class="white-card shadow-sm p-6 rounded-[35px] bg-white">
+                <h2 class="text-lg font-black mb-4 text-[#D4AF37]"> تحليل ربحية المنتج </h2>
+                <div class="space-y-4 text-sm">
+                    <input type="text" id="calc-client" placeholder="اسم المنتج / العميل" class="w-full p-4 bg-slate-50 border border-transparent rounded-2xl outline-none focus:border-[#D4AF37]">
+                    <input type="number" id="calc-price" oninput="calcProfit()" placeholder="سعر البيع  ($)" class="w-full p-4 bg-slate-50 border border-transparent rounded-2xl outline-none focus:border-[#D4AF37]">
+                    <input type="number" id="calc-cost" oninput="calcProfit()" placeholder="تكلفة المنتج (COGS)" class="w-full p-4 bg-slate-50 border border-transparent rounded-2xl outline-none focus:border-[#D4AF37]">
+                    <input type="number" id="calc-opex" oninput="calcProfit()" placeholder="التغليف، التوصيل، والتسويق (OPEX)" class="w-full p-4 bg-slate-50 border border-transparent rounded-2xl outline-none focus:border-[#D4AF37]">
                     
-                    <div class="p-6 bg-amber-50 rounded-3xl flex justify-between items-center border border-amber-100">
+                    <div class="p-5 bg-amber-50 rounded-2xl flex justify-between items-center border border-amber-100">
                         <div>
-                            <p class="text-xs text-amber-700 font-bold mb-1">صافي الربح</p>
-                            <span class="text-2xl font-black text-slate-800">$<span id="calc-net">0</span></span>
+                            <p class="text-xs text-amber-800 font-bold mb-1">صافي هامش الربح</p>
+                            <span class="text-xl font-black text-slate-800">$<span id="calc-net">0</span></span>
                         </div>
                         <div class="text-left">
-                            <p class="text-xs text-amber-700 font-bold mb-1">الهامش</p>
-                            <span id="calc-margin" class="text-xl font-black text-[#D4AF37]">0%</span>
+                            <p class="text-xs text-amber-800 font-bold mb-1">هامش الربح</p>
+                            <span id="calc-margin" class="text-lg font-black text-[#D4AF37]">0%</span>
                         </div>
                     </div>
-                    <button class="btn-action py-4" onclick="saveProfitEntry()">ترحيل القيد للميزانية</button>
+                    <button class="w-full p-4 dark-card text-[#D4AF37] font-black rounded-2xl border border-[#D4AF37]" onclick="saveProfitEntry()">حفظ الأرباح </button>
                 </div>
             </div>
         </div>
 
-        <div id="section-sales-entry" class="hidden space-y-6">
-            <div class="white-card">
-                <h2 class="text-xl font-black mb-6 text-[#D4AF37]">تسجيل حركة تجارية</h2>
-                <div class="space-y-4">
-                    <select id="sale-type" class="w-full p-4 bg-slate-50 rounded-2xl font-bold">
-                        <option value="sale">إيرادات (+)</option>
-                        <option value="purchase">نفقات (-)</option>
+        <div id="section-sales-entry" class="hidden space-y-4">
+            <div class="white-card rounded-[35px] bg-white p-6 border border-slate-100 shadow-sm">
+                <h2 class="text-lg font-black mb-4 text-[#D4AF37]">تسجيل حركة تجارية </h2>
+                <div class="space-y-4 text-sm">
+                    <select id="sale-type" class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 outline-none border border-transparent focus:border-[#D4AF37]">
+                        <option value="sale">إيرادات  (+)</option>
+                        <option value="purchase">نفقات  (-)</option>
                     </select>
-                    <input type="text" id="party-name" placeholder="البيان (الطرف الآخر)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none">
+                    <input type="text" id="party-name" placeholder="البيان (مثال: بيع لعميل ، شراء من مورد)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none border border-transparent focus:border-[#D4AF37]">
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="number" id="item-qty" placeholder="الكمية" class="p-4 bg-slate-50 rounded-2xl outline-none">
-                        <input type="number" id="item-price" placeholder="سعر الوحدة" class="p-4 bg-slate-50 rounded-2xl outline-none">
+                        <input type="number" id="item-qty" placeholder="الكمية" class="p-4 bg-slate-50 rounded-2xl outline-none border border-transparent focus:border-[#D4AF37]">
+                        <input type="number" id="item-price" placeholder="سعر الوحدة ($)" class="p-4 bg-slate-50 rounded-2xl outline-none border border-transparent focus:border-[#D4AF37]">
                     </div>
-                    <button class="btn-action py-4" onclick="addTrade()">ترحيل القيد</button>
+                    <button class="w-full p-4 dark-card text-[#D4AF37] font-black rounded-2xl border border-[#D4AF37]" onclick="addTrade()">تسجيل الحركة </button>
                 </div>
             </div>
         </div>
     </div>
-
+  
     <footer class="text-center py-8 opacity-50">
-        <p class="text-[10px] font-bold text-[#103058] tracking-widest">© 2026 بوصلة هدايه | HEDAYA'S COMPASS</p>
+        <p class="text-[10px] font-bold text-[#103058] tracking-widest">©️ 2026 بوصلة هدايه | HEDAYA'S COMPASS</p>
         <p class="text-[9px] text-[#071c38] mt-1">جميع الحقوق محفوظة لـ هدايه عودات</p>
     </footer>
 
+
     <script>    
-        // 1. نظام الحماية (PIN: 2003)
+        // نظام الدخول وفك القفل برقم PIN: 2003
         function checkHedaiaLock() {
-            const pinInput = document.getElementById('hedaya-pin');
-            if (pinInput.value === "2003") {
+            if (document.getElementById('hedaya-pin').value === "2003") {
                 const screen = document.getElementById('hedaya-lock-screen');
                 screen.style.opacity = '0';
-                setTimeout(() => {
-                    screen.style.display = 'none';
-                    updateUI(); // يضمن بناء الرسم البياني بدقة بعد فتح القفل
-                }, 600);
-            } else { 
-                document.getElementById('error-msg-h').style.display = 'block'; 
-            }
+                setTimeout(() => { screen.style.display = 'none'; updateUI(); }, 600);
+            } else { document.getElementById('error-msg-h').classList.remove('hidden'); }
         }
 
-        // 2. إدارة البيانات
-        let records = JSON.parse(localStorage.getItem('hedaya_v4_final')) || [];
+        let records = JSON.parse(localStorage.getItem('hedaya_v7_flexible')) || [];
         let myChart = null;
 
         function saveToStorage() {
-            localStorage.setItem('hedaya_v4_final', JSON.stringify(records));
+            localStorage.setItem('hedaya_v7_flexible', JSON.stringify(records));
             updateUI();
         }
 
-        // دالة حساب الربحية لبوصلة هدايه
-        function calcProfit() {
-            try {
-                const cost = parseFloat(document.getElementById('calc-cost').value) || 0;
-                const price = parseFloat(document.getElementById('calc-price').value) || 0;
-                const opex = parseFloat(document.getElementById('calc-opex').value) || 0;
-
-                const netProfit = price - (cost + opex);
-                const margin = price > 0 ? (netProfit / price) * 100 : 0;
-
-                document.getElementById('calc-net').innerText = netProfit.toLocaleString();
-                document.getElementById('calc-margin').innerText = margin.toFixed(0) + "%";
-            } catch (error) {
-                console.error("خطأ في حساب الربحية:", error);
-            }
-        }
-
-        // دالة ترحيل الربح إلى السجل العام (تم تصحيح استدعاء دالة الحفظ هنا)
-        function saveProfitEntry() {
-            const client = document.getElementById('calc-client').value || "عملية بيع";
-            const netProfit = parseFloat(document.getElementById('calc-net').innerText.replace(/,/g, '')) || 0;
-
-            const record = {
-                id: Date.now(),
-                name: `ربح من: ${client}`,
-                amount: netProfit,
-                type: 'sale',
-                date: new Date().toISOString()
-            };
-
-            records.unshift(record);
-            saveToStorage(); // تم تغييرها من saveData إلى دالتكِ الأساسية الحالية
-            
-            // تصفير الخانات
-            document.getElementById('calc-client').value = "";
-            document.getElementById('calc-cost').value = "";
-            document.getElementById('calc-price').value = "";
-            document.getElementById('calc-opex').value = "";
-            calcProfit();
-        }
-
-        // 3. التنقل بين الأقسام
         function toggleMenu() {
             document.getElementById('side-menu').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('hidden');
@@ -266,21 +348,34 @@
             updateUI();
         }
 
-        // 4. الدوال المحاسبية (المنطق المزدوج)
-        function addManualEntry() {
-            const amt = parseFloat(document.getElementById('manual-amount').value);
-            const type = document.getElementById('manual-type').value;
-            const desc = document.getElementById('manual-desc').value || "قيد تسوية";
+        // دالة الإدخال المرن للزيادة والنقصان المستقلين
+        function quickAddFlexible(categoryType, descId, amountId, actionType) {
+            const amtInput = document.getElementById(amountId);
+            const descInput = document.getElementById(descId);
+            
+            let amt = parseFloat(amtInput.value);
+            const desc = descInput.value || `بند ${categoryType}`;
 
-            if (isNaN(amt) || amt <= 0) return alert("يرجى إدخال مبلغ صحيح");
+            if (isNaN(amt) || amt <= 0) {
+                alert("يرجى كتابة سعر ومبلغ صحيح أولاً.");
+                return;
+            }
+
+            if (actionType === 'minus') {
+                amt = -amt;
+            }
 
             records.unshift({
-                name: desc, amount: amt, type: 'manual', target: type, date: Date.now()
+                id: Date.now(),
+                name: desc, 
+                amount: amt, 
+                type: 'direct-balance', 
+                category: categoryType, 
+                date: Date.now()
             });
 
-            document.getElementById('manual-amount').value = '';
-            document.getElementById('manual-desc').value = '';
-            showSection('dashboard', document.querySelector('.nav-icon-link:first-child'));
+            amtInput.value = '';
+            descInput.value = '';
             saveToStorage();
         }
 
@@ -288,95 +383,192 @@
             const price = parseFloat(document.getElementById('item-price').value) || 0;
             const qty = parseFloat(document.getElementById('item-qty').value) || 1;
             const type = document.getElementById('sale-type').value;
-            const party = document.getElementById('party-name').value || "حركة تجارية";
+            const party = document.getElementById('party-name').value || "عملية تجارية";
 
-            if(price <= 0) return alert("أدخل السعر");
+            if(price <= 0) { alert("حدد السعر من فضلك."); return; }
 
-            records.unshift({
-                name: party, amount: qty * price, type: type, date: Date.now()
+            records.unshift({ 
+                id: Date.now(),
+                name: party, 
+                amount: qty * price, 
+                type: type, 
+                date: Date.now() 
             });
+
+            document.getElementById('item-price').value = '';
+            document.getElementById('item-qty').value = '';
+            document.getElementById('party-name').value = '';
+
             showSection('dashboard', document.querySelector('.nav-icon-link:first-child'));
             saveToStorage();
         }
 
-        // 5. محرك التحديث (الميزانية العمومية)
+        function calcProfit() {
+            const price = parseFloat(document.getElementById('calc-price').value) || 0;
+            const cost = parseFloat(document.getElementById('calc-cost').value) || 0;
+            const opex = parseFloat(document.getElementById('calc-opex').value) || 0;
+            const netProfit = price - (cost + opex);
+            const margin = price > 0 ? (netProfit / price) * 100 : 0;
+            
+            document.getElementById('calc-net').innerText = netProfit.toLocaleString();
+            document.getElementById('calc-margin').innerText = margin.toFixed(0) + "%";
+        }
+
+        // إصلاح وتأمين دالة ترحيل تحليل الربحية للوحة الرئيسية
+        function saveProfitEntry() {
+            const client = document.getElementById('calc-client').value || "تحليل أرباح صفقة";
+            const price = parseFloat(document.getElementById('calc-price').value) || 0;
+            const cost = parseFloat(document.getElementById('calc-cost').value) || 0;
+            const opex = parseFloat(document.getElementById('calc-opex').value) || 0;
+
+            if (price <= 0) { alert("يرجى تحديد سعر البيع أولاً"); return; }
+
+            // ترحيل قيمة الإيراد
+            records.unshift({
+                id: Date.now(),
+                name: `إيراد صفقة: ${client}`,
+                amount: price,
+                type: 'sale',
+                date: Date.now()
+            });
+
+            // ترحيل المصاريف الكلية كنفقة منفصلة إن وجدت
+            const totalExp = cost + opex;
+            if (totalExp > 0) {
+                records.unshift({
+                    id: Date.now() + 1,
+                    name: `نفقات وتكاليف صفقة: ${client}`,
+                    amount: totalExp,
+                    type: 'purchase',
+                    date: Date.now()
+                });
+            }
+
+            document.getElementById('calc-client').value = '';
+            document.getElementById('calc-price').value = '';
+            document.getElementById('calc-cost').value = '';
+            document.getElementById('calc-opex').value = '';
+            calcProfit();
+
+            showSection('dashboard', document.querySelector('.nav-icon-link:first-child'));
+            saveToStorage();
+        }
+
         function updateUI() {
             let inflow = 0, outflow = 0, assets = 0, liabs = 0, equity = 0;
+            
             const log = document.getElementById('records-list');
+            const tAssets = document.getElementById('table-assets-body');
+            const tLiab = document.getElementById('table-liab-body');
+            const tEquity = document.getElementById('table-equity-body');
+
             if (!log) return;
             log.innerHTML = '';
+            if (tAssets) tAssets.innerHTML = '';
+            if (tLiab) tLiab.innerHTML = '';
+            if (tEquity) tEquity.innerHTML = '';
 
             records.forEach((r, i) => {
                 const amt = r.amount;
-                
-                if(r.type === 'sale') { 
-                    inflow += amt; assets += amt; equity += amt; 
-                } else if(r.type === 'purchase') { 
-                    outflow += amt; assets -= amt; equity -= amt; 
-                } else if(r.type === 'manual') {
-                    if(r.target === 'asset-plus') { assets += amt; equity += amt; }
-                    else if(r.target === 'asset-minus') { assets -= amt; equity -= amt; }
-                    else if(r.target === 'liab-plus') { liabs += amt; assets += amt; }
-                    else if(r.target === 'liab-minus') { liabs -= amt; assets -= amt; }
-                    else if(r.target === 'equity-plus') { equity += amt; assets += amt; }
-                    else if(r.target === 'equity-minus') { equity -= amt; assets -= amt; }
+                const isPositive = amt >= 0;
+                const formattedAmt = (isPositive ? '+$' : '-$') + Math.abs(amt).toLocaleString();
+                const textColorClass = isPositive ? 'text-emerald-600' : 'text-red-500';
+
+                if (r.type === 'direct-balance') {
+                    const rowHTML = `
+                        <tr>
+                            <td class="p-2 text-center text-red-400 font-bold cursor-pointer hover:text-red-600 transition-colors" onclick="deleteRecord(${i})">✕</td>
+                            <td class="p-2 text-center font-black ${textColorClass}">${formattedAmt}</td>
+                            <td class="p-2 font-bold text-slate-700">${r.name}</td>
+                        </tr>`;
+
+                    if (r.category === 'asset') {
+                        assets += amt;
+                        if (tAssets) tAssets.innerHTML += rowHTML;
+                    } else if (r.category === 'liab') {
+                        liabs += amt;
+                        if (tLiab) tLiab.innerHTML += rowHTML;
+                    } else if (r.category === 'equity') {
+                        equity += amt;
+                        if (tEquity) tEquity.innerHTML += rowHTML;
+                    }
+                } else {
+                    if(r.type === 'sale') { inflow += amt; assets += amt; equity += amt; } 
+                    else if(r.type === 'purchase') { outflow += amt; assets -= amt; equity -= amt; }
                 }
 
-                const d = new Date(r.date);
-                const dateStr = d.toLocaleDateString('ar-EG');
-
+                const d = new Date(r.date || Date.now());
                 log.innerHTML += `
-                    <div class="record-item flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm mb-2 border-r-4 border-[#D4AF37]">
-                        <div class="flex items-center gap-2">
-                            <button onclick="deleteRecord(${i})" class="text-red-400 font-bold">✕</button>
-                            <button onclick="editRecord(${i})" class="text-blue-400 text-[10px]">✎</button>
-                            <span class="font-black text-[#00002A] ml-1">$${amt.toLocaleString()}</span>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-bold text-[#1A3F75] text-xs">${r.name}</p>
-                            <p class="text-[9px] text-gray-400 font-bold">${dateStr}</p>
+                    <div class="flex justify-between items-center p-3.5 bg-slate-50/60 rounded-2xl text-xs mb-2 border-r-4 border-[#D4AF37]">
+                        <button onclick="deleteRecord(${i})" class="text-red-400 font-bold text-sm px-1 hover:text-red-600">✕</button>
+                        <span class="font-black ${textColorClass}">${formattedAmt}</span>
+                        <div class="text-right flex-1 pr-3">
+                            <p class="font-bold text-slate-700">${r.name}</p>
+                            <p class="text-[9px] text-slate-400">${d.toLocaleDateString('ar-EG')}</p>
                         </div>
                     </div>`;
             });
 
             document.getElementById('display-inflow').innerText = inflow.toLocaleString();
             document.getElementById('display-outflow').innerText = outflow.toLocaleString();
-            document.getElementById('asset-total').innerText = "$" + assets.toLocaleString();
-            document.getElementById('liab-total').innerText = "$" + liabs.toLocaleString();
-            document.getElementById('equity-total').innerText = "$" + equity.toLocaleString();
             
-            const check = assets - (liabs + equity);
+            document.getElementById('asset-total').innerText = (assets >= 0 ? '$' : '-$') + Math.abs(assets).toLocaleString();
+            document.getElementById('liab-total').innerText = (liabs >= 0 ? '$' : '-$') + Math.abs(liabs).toLocaleString();
+            document.getElementById('equity-total').innerText = (equity >= 0 ? '$' : '-$') + Math.abs(equity).toLocaleString();
+            
+            const difference = assets - (liabs + equity);
             const checkEl = document.getElementById('equation-check');
             if (checkEl) {
-                checkEl.innerText = Math.abs(check) < 0.1 ? "الميزانية متوازنة تماماً ✓" : "فرق التوازن: " + check.toFixed(2);
-                checkEl.style.color = Math.abs(check) < 0.1 ? "#10b981" : "#ef4444";
+                if (Math.abs(difference) < 0.1) {
+                    checkEl.innerText = "الميزانية متطابقة ومتوازنة تماماً بموجب مدخلاتك الحالية ✓";
+                    checkEl.style.color = "#10b981"; checkEl.style.backgroundColor = "#ecfdf5";
+                } else {
+                    checkEl.innerText = "الفارق أو الفجوة الحالية بين البنود المدخلة: " + (difference >= 0 ? '' : '-') + "$" + Math.abs(difference).toLocaleString();
+                    checkEl.style.color = "#ef4444"; checkEl.style.backgroundColor = "#fef2f2";
+                }
             }
-            
             initChart(assets, liabs, equity);
         }
 
-        function deleteRecord(i) {
-            if(confirm('حذف هذا القيد؟')) { records.splice(i, 1); saveToStorage(); }
-        }
-        
-        function editRecord(i) {
-            const newName = prompt('تعديل البيان:', records[i].name);
-            const newAmt = prompt('تعديل المبلغ:', records[i].amount);
-            
-            if(newName !== null && newAmt !== null && !isNaN(newAmt)) {
-                records[i].name = newName;
-                records[i].amount = parseFloat(newAmt);
-                saveToStorage();
+        function deleteRecord(i) { 
+            if(confirm("هل أنت متأكد من حذف هذا البند؟")) {
+                records.splice(i, 1); 
+                saveToStorage(); 
             }
         }
-        
+
+        function initChart(assets, liabs, equity) {
+            const ctx = document.getElementById('financeChart');
+            if (!ctx) return;
+            if (myChart) { myChart.destroy(); }
+            
+            const chartData = (assets === 0 && liabs === 0 && equity === 0) ? [1, 0, 0] : [Math.abs(assets), Math.abs(liabs), Math.abs(equity)];
+
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['الأصول', 'الالتزامات', 'حقوق الملكية'],
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: ['#00002A', '#1A3F75', '#D4AF37'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
         function exportExcel() {
             if (records.length === 0) return alert("لا توجد بيانات لتصديرها");
 
             const printWindow = window.open('', '_blank');
             
             let tableRows = records.map((r, index) => {
-                const d = new Date(r.date);
+                const d = new Date(r.date || Date.now());
                 const dateStr = d.toLocaleDateString('ar-EG');
                 const typeAr = r.type === 'sale' ? 'إيرادات' : (r.type === 'purchase' ? 'نفقات' : 'قيد تسوية');
                 
@@ -408,78 +600,28 @@
                 </head>
                 <body>
                     <div class="report-header">
-                        <h2 style="margin:0;">سجل القيود اليومية - The Compass</h2>
-                        <p style="margin:5px 0 0 0;">بتاريخ: ${new Date().toLocaleDateString('ar-EG')}</p>
+                        <h2>سجل الحركات المالية والقيود - بوصلة هدايه</h2>
                     </div>
+                    <button class="no-print-btn" onclick="window.print()">طباعة التقرير / حفظ PDF</button>
                     <table>
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>التاريخ</th>
-                                <th>البيان (تفاصيل العملية)</th>
-                                <th>النوع</th>
-                                <th>المبلغ</th>
+                                <th>البيان / تفاصيل الحركة</th>
+                                <th>نوع الحركة</th>
+                                <th>القيمة المالية</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${tableRows}
                         </tbody>
                     </table>
-                    <center><button class="no-print-btn" onclick="window.print()">طباعة السجل المحاسبي</button></center>
                 </body>
                 </html>
             `);
             printWindow.document.close();
         }
-
-        function initChart(a, l, e) {
-            const canvas = document.getElementById('financeChart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            if (myChart) myChart.destroy();
-            
-            // لتجنب اختفاء الدائرة تماماً إذا كانت الميزانية صفرية في البداية
-            const initialData = (a === 0 && l === 0 && e === 0) ? [1, 0, 0] : [Math.max(0, a), Math.max(0, l), Math.max(0, e)];
-
-            myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['أصول', 'التزامات', 'ملكية'],
-                    datasets: [{
-                        data: initialData,
-                        backgroundColor: ['#00002A', '#1A3F75', '#D4AF37'],
-                        borderWidth: 0,
-                        hoverOffset: 12
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { 
-                            display: true, 
-                            position: 'bottom', 
-                            rtl: true,
-                            labels: {
-                                font: { family: "'Cairo', sans-serif", size: 11, weight: 'bold' },
-                                padding: 20,
-                                usePointStyle: true,
-                                generateLabels: function(chart) {
-                                    return [
-                                        { text: 'الأصول', fillStyle: '#00002A', pointStyle: 'circle' },
-                                        { text: 'الالتزامات', fillStyle: '#1A3F75', pointStyle: 'circle' },
-                                        { text: 'حقوق الملكية', fillStyle: '#D4AF37', pointStyle: 'circle' },
-                                    ];
-                                }
-                            }
-                        },
-                        tooltip: { enabled: false }
-                    }
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', updateUI);
     </script>
 </body>
 </html>
