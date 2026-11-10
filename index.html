@@ -1191,5 +1191,17 @@ function _0x4b88(_0x11cc14,_0x218dde){_0x11cc14=_0x11cc14-0x1af;var _0x4fccf0=_0
   document.addEventListener('DOMContentLoaded',function(){ clean(); mo.observe(document.body,{childList:true,subtree:true}); });
 })();
 </script>
+
+<script id="rights-line-patch">
+/* Nov 10: hide the copyright footer line that shows inside the customer form. Remove this block to revert. */
+(function(){
+  function hide(){
+    document.querySelectorAll('p').forEach(function(p){
+      if(p.textContent.indexOf('جميع الحقوق محفوظة')!==-1){ p.style.display='none'; }
+    });
+  }
+  document.addEventListener('DOMContentLoaded',function(){ hide(); new MutationObserver(hide).observe(document.body,{childList:true,subtree:true}); });
+})();
+</script>
 </body>
 </html>
